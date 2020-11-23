@@ -1,0 +1,305 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CRUD Node.js and Mysql</title>
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="/assets/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/assets/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="/assets/css/jquery-ui.min.css">
+
+
+</head>
+<body>
+
+  <nav class="navbar navbar-dark bg-primary">
+    <a class="navbar-brand">CRUD</a>
+    <form action="/search" method="GET" class="form-inline">
+        <input id="tags" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search value=">
+        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </nav>
+
+
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header">
+                      Data Mahasiswa
+
+                      <button class="btn btn-success float-right" data-toggle="modal" data-target="#myModalAdd">Add New</button>
+                  </div>
+
+                  <div class="card-body">
+                      <h4>Select Numbers Of Rows</h4>
+                      <div class="table-responsive">
+                              <table class="table table-striped table-bordered" id="mytable">
+                                <thead class="thead-dark">
+                                    <tr>
+                                      <th>Npm</th>
+                                      <th>Nama</th>
+                                      <th>Tempat Lahir</th>
+                                      <th>Tanggal Lahir</th>
+                                      <th>Jenis Kelamin</th>
+                                      <th>Agama</th>
+                                      <th>Alamat</th>
+                                      <th>No Telepon</th>
+                                      <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  {{#each results}}
+                                  <tr>
+                                    
+
+                                    <td>{{ npm }}</td>
+                                    <td>{{ nama }}</td>
+                                    <td>{{ tempat_lahir }}</td>
+                                    <td>{{ tanggal_lahir }}</td>
+                                    <td>{{ jenis_kelamin }}</td>
+                                    <td>{{ agama }}</td>
+                                    <td>{{ alamat }}</td>
+                                    <td>{{ no_telepon }}</td>
+
+                                    <td>
+                                      <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-npm="{{ npm }}" data-nama="{{ nama }}" data-tempat_lahir="{{ tempat_lahir }}" data-jenis_kelamin="{{ jenis_kelamin }}" data-agama="{{ agama }}" data-alamat="{{ alamat }}" data-no_telepon="{{ no_telepon }}">Edit</a>
+                                      <a href="javascript:void(0);" class="btn btn-sm btn-danger delete" data-npm="{{ npm }}">Delete</a>
+                                    </td>
+                                  </tr>
+                                  {{/each}}
+                                </tbody>
+                              </table>
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+ 
+    <!-- Modal Add Produk-->
+      <form action="/save" method="post">
+        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Add New Product</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div class="form-group">
+                   <input type="text" name="npm" class="form-control" placeholder="npm" required>
+               </div>
+
+              <div class="form-group">
+                   <input type="text" name="nama" class="form-control" placeholder="nama" required>
+               </div>
+
+               <div class="form-group">
+                   <input type="text" name="tempat_lahir" class="form-control" placeholder="tempat_lahir" required>
+               </div>
+ 
+               <div class="form-group">
+                   <input type="date" name="tanggal_lahir" class="form-control" placeholder="tanggal_lahir" required>
+               </div>
+                    
+               <div class="form-group form-check-inline">
+                 <span style="margin-right: 20px;">Jenis Kelamin</span>
+                     <input  type="radio" id="Laki-laki" name="jenis_kelamin" value="Laki-laki" required>
+                        <label style="margin-top: 7px; margin-left: 10px;margin-right: 10px" for="Laki-laki">Laki-laki</label><br>
+                     <input type="radio" id="Perempuan" name="jenis_kelamin" value="Perempuan" required>
+                        <label style="margin-top: 7px; margin-left: 10px;margin-right: 10px" for="Perempuan">Perempuan</label><br>
+               </div>
+ 
+               <div class="form-group">
+                   <input type="text" name="alamat" class="form-control" placeholder="alamat" required>
+               </div>
+
+               <div class="form-group">
+                   <input type="text" name="agama" class="form-control" placeholder="agama" required>
+               </div>
+
+               <div class="form-group">
+                   <input type="text" name="no_telepon" class="form-control" placeholder="no_telepon" required>
+               </div>
+
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="submit" class="btn btn-primary">Save</button>
+             </div>
+           </div>
+         </div>
+        </div>
+     </form>
+ 
+     <!-- Modal Update Produk-->
+   <form action="/update" method="post">
+       <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <div class="form-group">
+                   <input type="text" name="npm" class="form-control" placeholder="npm" required>
+               </div>
+
+              <div class="form-group">
+                   <input type="text" name="nama" class="form-control" placeholder="nama" required>
+               </div>
+
+               <div class="form-group">
+                   <input type="text" name="tempat_lahir" class="form-control" placeholder="tempat_lahir" required>
+               </div>
+ 
+               <div class="form-group">
+                   <input type="date" name="tanggal_lahir" class="form-control" placeholder="tanggal_lahir" required>
+               </div>
+
+               <div class="form-group form-check-inline">
+                     <input  type="radio" id="Laki-laki" name="jenis_kelamin" value="Laki-laki" required>
+                        <label style="margin-top: 7px; margin-left: 10px;margin-right: 10px" for="Laki-laki">Laki-laki</label><br>
+                     <input type="radio" id="Perempuan" name="jenis_kelamin" value="Perempuan" required>
+                        <label style="margin-top: 7px; margin-left: 10px;margin-right: 10px" for="Perempuan">Perempuan</label><br>
+               </div>
+ 
+               <div class="form-group">
+                   <input type="text" name="alamat" class="form-control" placeholder="alamat" required>
+               </div>
+
+               <div class="form-group">
+                   <input type="text" name="agama" class="form-control" placeholder="agama" required>
+               </div>
+
+               <div class="form-group">
+                   <input type="text" name="no_telepon" class="form-control" placeholder="no_telepon" required>
+               </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="id" class="product_id">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </div>
+        </div>
+       </div>
+  </form>
+ 
+     <!-- Modal Delete Produk-->
+      <form id="add-row-form" action="/delete" method="post">
+         <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                                        <h5 class="modal-title" id="myModalLabel">Delete Product</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                   </div>
+                   <div class="modal-body">
+                                                 <strong>Anda yakin mau menghapus data ini?</strong>
+                   </div>
+                   <div class="modal-footer">
+                                    <input type="hidden" name="npm" class="form-control npm" required>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Delete</button>
+                   </div>
+                    </div>
+            </div>
+         </div>
+     </form>
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/jquery-ui.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.dataTables.min.js"></script>
+<script src="/assets/js/dataTables.bootstrap.min.js"></script>
+<script src="/assets/js/typeahead.bundle.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+
+            //tampilkan data ke modal untuk edit
+      $('#mytable').on('click','.edit',function(){
+        var npm = $(this).data('npm');
+        var nama = $(this).data('nama');
+        var tempat_lahir = $(this).data('tempat_lahir');
+        var tanggal_lahir = $(this).data('tanggal_lahir');
+        var jenis_kelamin = $(this).data('jenis_kelamin');
+        var agama = $(this).data('agama');
+        var alamat = $(this).data('alamat');
+        var no_telepon = $(this).data('no_telepon');
+        $('#EditModal').modal('show');
+        $('.npm').val(npm);
+        $('.nama').val(nama);
+        $('.tempat_lahir').val(tempat_lahir);
+        $('.tanggal_lahir').val(tanggal_lahir);
+        $('.jenis_kelamin').val(jenis_kelamin);
+        $('.agama').val(agama);
+        $('.alamat').val(alamat);
+        $('.no_telepon').val(no_telepon);
+      });
+            //tampilkan modal hapus record
+            $('#mytable').on('click','.delete',function(){
+        var npm = $(this).data('npm');
+        $('#DeleteModal').modal('show');
+        $('.npm').val(npm);
+      });
+
+
+
+    });
+</script>
+
+<script>
+
+
+$( function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    $( "#tags" ).autocomplete({
+      source: search_table($(this).val())
+    });
+
+
+  });
+
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#mytable').DataTable();
+});
+</script>
+
+
+
+</body>
+</html>
